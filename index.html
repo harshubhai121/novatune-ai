@@ -1,1140 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#08080d">
-<meta name="description" content="NovaTune AI — Create music, voices, lyrics and audio with AI.">
-<title>NovaTune AI — Create Without Limits</title>
-
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-:root{
-    --bg:#07070b;
-    --surface:#101016;
-    --surface2:#16161f;
-    --surface3:#1c1c27;
-    --text:#fff;
-    --muted:#8e8e9d;
-    --border:rgba(255,255,255,.08);
-    --purple:#8b5cf6;
-    --pink:#ec4899;
-    --blue:#4f8cff;
-    --green:#35d399;
-}
-
-body{
-    min-height:100vh;
-    color:var(--text);
-    background:
-        radial-gradient(circle at 15% -10%,rgba(139,92,246,.22),transparent 30%),
-        radial-gradient(circle at 100% 0%,rgba(236,72,153,.15),transparent 28%),
-        var(--bg);
-    font-family:Inter,Arial,sans-serif;
-}
-
-button,
-input,
-textarea,
-select{
-    font:inherit;
-}
-
-button{
-    cursor:pointer;
-}
-
-.app{
-    display:flex;
-    min-height:100vh;
-}
-
-/* SIDEBAR */
-
-.sidebar{
-    width:245px;
-    position:fixed;
-    inset:0 auto 0 0;
-    padding:22px 14px;
-    background:rgba(8,8,13,.88);
-    backdrop-filter:blur(22px);
-    border-right:1px solid var(--border);
-    z-index:50;
-}
-
-.logo{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding:0 10px 28px;
-    font-weight:800;
-    font-size:21px;
-}
-
-.logo-icon{
-    width:36px;
-    height:36px;
-    display:grid;
-    place-items:center;
-    border-radius:12px;
-    background:linear-gradient(135deg,var(--purple),var(--pink));
-}
-
-.logo span{
-    background:linear-gradient(90deg,#a98aff,#ff72c9);
-    -webkit-background-clip:text;
-    color:transparent;
-}
-
-.label{
-    color:#5e5f6b;
-    font-size:10px;
-    font-weight:bold;
-    letter-spacing:1.5px;
-    padding:15px 12px 8px;
-}
-
-.nav{
-    width:100%;
-    border:1px solid transparent;
-    background:transparent;
-    color:#a6a6b2;
-    padding:12px;
-    border-radius:12px;
-    text-align:left;
-    margin-bottom:4px;
-    transition:.2s;
-}
-
-.nav:hover,
-.nav.active{
-    color:#fff;
-    background:rgba(255,255,255,.055);
-    border-color:var(--border);
-}
-
-.nav.active{
-    box-shadow:inset 3px 0 var(--purple);
-}
-
-.bottom{
-    position:absolute;
-    left:14px;
-    right:14px;
-    bottom:15px;
-    border-top:1px solid var(--border);
-    padding-top:14px;
-}
-
-.user{
-    display:flex;
-    gap:10px;
-    align-items:center;
-}
-
-.avatar{
-    width:40px;
-    height:40px;
-    border-radius:12px;
-    display:grid;
-    place-items:center;
-    font-weight:800;
-    background:linear-gradient(135deg,var(--purple),var(--pink));
-}
-
-.user small{
-    color:var(--muted);
-}
-
-/* MAIN */
-
-.main{
-    margin-left:245px;
-    width:calc(100% - 245px);
-}
-
-.topbar{
-    height:70px;
-    position:sticky;
-    top:0;
-    z-index:40;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 30px;
-    background:rgba(7,7,11,.78);
-    backdrop-filter:blur(20px);
-    border-bottom:1px solid var(--border);
-}
-
-.search{
-    width:min(420px,45vw);
-    position:relative;
-}
-
-.search input{
-    width:100%;
-    padding:11px 14px 11px 38px;
-    border-radius:11px;
-    border:1px solid var(--border);
-    outline:0;
-    background:#101016;
-    color:white;
-}
-
-.search-icon{
-    position:absolute;
-    left:13px;
-    top:50%;
-    transform:translateY(-50%);
-    color:#777;
-}
-
-.actions{
-    display:flex;
-    gap:8px;
-    align-items:center;
-}
-
-.action{
-    width:40px;
-    height:40px;
-    border-radius:11px;
-    background:#111118;
-    border:1px solid var(--border);
-    color:white;
-}
-
-.free{
-    padding:9px 13px;
-    border-radius:10px;
-    color:#cbb8ff;
-    border:1px solid rgba(139,92,246,.25);
-    background:rgba(139,92,246,.1);
-    font-size:12px;
-    font-weight:bold;
-}
-
-/* CONTENT */
-
-.content{
-    max-width:1500px;
-    margin:auto;
-    padding:30px;
-}
-
-.page{
-    display:none;
-    animation:appear .3s ease;
-}
-
-.page.active{
-    display:block;
-}
-
-@keyframes appear{
-    from{
-        opacity:0;
-        transform:translateY(8px);
-    }
-    to{
-        opacity:1;
-        transform:none;
-    }
-}
-
-/* HERO */
-
-.hero{
-    position:relative;
-    overflow:hidden;
-    min-height:430px;
-    padding:55px;
-    border:1px solid var(--border);
-    border-radius:28px;
-    background:
-        radial-gradient(circle at 85% 20%,rgba(139,92,246,.28),transparent 28%),
-        radial-gradient(circle at 100% 100%,rgba(236,72,153,.18),transparent 32%),
-        linear-gradient(135deg,#15131f,#0e0e15);
-}
-
-.badge{
-    display:inline-block;
-    padding:8px 12px;
-    border-radius:30px;
-    color:#c9c9d3;
-    border:1px solid var(--border);
-    background:rgba(255,255,255,.05);
-    font-size:11px;
-    font-weight:bold;
-}
-
-.hero h1{
-    max-width:800px;
-    margin:22px 0;
-    font-size:clamp(45px,6vw,78px);
-    line-height:.96;
-    letter-spacing:-4px;
-}
-
-.gradient{
-    background:linear-gradient(90deg,#a98aff,#ff6bc8,#8eb8ff);
-    -webkit-background-clip:text;
-    color:transparent;
-}
-
-.hero p{
-    max-width:650px;
-    color:#a3a4b1;
-    line-height:1.7;
-}
-
-.buttons{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-top:30px;
-}
-
-.btn{
-    padding:12px 17px;
-    border-radius:11px;
-    color:white;
-    background:#171720;
-    border:1px solid var(--border);
-}
-
-.btn-primary{
-    border:0;
-    font-weight:bold;
-    background:linear-gradient(100deg,var(--purple),var(--pink));
-    box-shadow:0 12px 35px rgba(139,92,246,.25);
-}
-
-.btn:hover{
-    transform:translateY(-1px);
-}
-
-/* STATS */
-
-.stats{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:13px;
-    margin-top:15px;
-}
-
-.stat{
-    padding:18px;
-    border-radius:17px;
-    border:1px solid var(--border);
-    background:var(--surface);
-}
-
-.stat small{
-    color:var(--green);
-}
-
-/* HEAD */
-
-.head{
-    display:flex;
-    justify-content:space-between;
-    align-items:end;
-    margin:40px 0 17px;
-}
-
-.head h2{
-    font-size:22px;
-}
-
-.head p{
-    color:var(--muted);
-    font-size:12px;
-    margin-top:5px;
-}
-
-/* CREATE */
-
-.creator{
-    padding:22px;
-    border-radius:21px;
-    border:1px solid var(--border);
-    background:var(--surface);
-}
-
-textarea{
-    width:100%;
-    min-height:150px;
-    padding:18px;
-    resize:vertical;
-    outline:0;
-    color:white;
-    border:1px solid var(--border);
-    border-radius:15px;
-    background:#09090e;
-}
-
-textarea:focus{
-    border-color:rgba(139,92,246,.55);
-}
-
-.controls{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:10px;
-    margin-top:13px;
-}
-
-.field label{
-    display:block;
-    color:#777884;
-    font-size:9px;
-    letter-spacing:1px;
-    margin:0 0 6px 3px;
-}
-
-select{
-    width:100%;
-    padding:11px;
-    color:white;
-    background:#0c0c12;
-    border:1px solid var(--border);
-    border-radius:10px;
-    outline:0;
-}
-
-.create-bottom{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-top:16px;
-    padding-top:15px;
-    border-top:1px solid var(--border);
-}
-
-.toggle{
-    color:#999aa6;
-    font-size:12px;
-}
-
-.switch{
-    display:inline-block;
-    width:38px;
-    height:21px;
-    margin-right:7px;
-    vertical-align:middle;
-    border-radius:20px;
-    background:#292934;
-}
-
-.switch.on{
-    background:var(--purple);
-}
-
-/* FEATURES */
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:13px;
-}
-
-.card{
-    padding:20px;
-    border-radius:17px;
-    border:1px solid var(--border);
-    background:var(--surface);
-    transition:.2s;
-}
-
-.card:hover{
-    transform:translateY(-3px);
-    background:var(--surface2);
-}
-
-.card-icon{
-    width:43px;
-    height:43px;
-    display:grid;
-    place-items:center;
-    margin-bottom:14px;
-    border-radius:13px;
-    background:rgba(139,92,246,.12);
-    font-size:20px;
-}
-
-.card h3{
-    font-size:14px;
-}
-
-.card p{
-    margin-top:6px;
-    color:var(--muted);
-    font-size:12px;
-    line-height:1.5;
-}
-
-/* SONGS */
-
-.songs{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:13px;
-}
-
-.song{
-    overflow:hidden;
-    border-radius:17px;
-    border:1px solid var(--border);
-    background:var(--surface);
-}
-
-.cover{
-    height:180px;
-    display:grid;
-    place-items:center;
-    position:relative;
-    font-size:45px;
-    background:
-        radial-gradient(circle at 25% 20%,#9d6cff,transparent 25%),
-        radial-gradient(circle at 80% 80%,#ff4eae,transparent 30%),
-        #15131f;
-}
-
-.cover.b{
-    background:
-        radial-gradient(circle at 70% 20%,#4f8cff,transparent 30%),
-        radial-gradient(circle at 20% 80%,#8b5cf6,transparent 30%),
-        #10131e;
-}
-
-.cover.c{
-    background:
-        radial-gradient(circle at 30% 30%,#ff8b65,transparent 30%),
-        radial-gradient(circle at 80% 80%,#ff3c9e,transparent 30%),
-        #171017;
-}
-
-.cover.d{
-    background:
-        radial-gradient(circle at 50% 20%,#4ee5a0,transparent 30%),
-        radial-gradient(circle at 20% 80%,#4f8cff,transparent 30%),
-        #101916;
-}
-
-.play{
-    position:absolute;
-    right:12px;
-    bottom:12px;
-    width:40px;
-    height:40px;
-    border:0;
-    border-radius:50%;
-    background:white;
-    color:#111;
-}
-
-.song-body{
-    padding:14px;
-}
-
-.song-body h3{
-    font-size:14px;
-}
-
-.song-body p{
-    margin-top:5px;
-    color:var(--muted);
-    font-size:11px;
-}
-
-.meta{
-    display:flex;
-    justify-content:space-between;
-    margin-top:13px;
-    color:#777884;
-    font-size:11px;
-}
-
-/* PROFILE */
-
-.profile-layout{
-    display:grid;
-    grid-template-columns:280px 1fr;
-    gap:15px;
-}
-
-.profile-box{
-    padding:22px;
-    border-radius:20px;
-    border:1px solid var(--border);
-    background:var(--surface);
-}
-
-.big-avatar{
-    width:90px;
-    height:90px;
-    margin:auto;
-    display:grid;
-    place-items:center;
-    border-radius:27px;
-    font-size:30px;
-    font-weight:900;
-    background:linear-gradient(135deg,var(--purple),var(--pink));
-}
-
-.profile-box.center{
-    text-align:center;
-}
-
-.profile-box h2{
-    margin-top:14px;
-}
-
-.muted{
-    color:var(--muted);
-    font-size:12px;
-}
-
-.profile-stats{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    margin-top:20px;
-    padding-top:15px;
-    border-top:1px solid var(--border);
-}
-
-.profile-stats span{
-    display:block;
-    color:var(--muted);
-    font-size:10px;
-    margin-top:4px;
-}
-
-.setting{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:16px 0;
-    border-bottom:1px solid var(--border);
-}
-
-.setting:last-child{
-    border:0;
-}
-
-.setting h4{
-    font-size:13px;
-}
-
-.setting p{
-    margin-top:4px;
-    color:var(--muted);
-    font-size:11px;
-}
-
-/* MODAL */
-
-.modal{
-    position:fixed;
-    inset:0;
-    display:none;
-    place-items:center;
-    z-index:200;
-    padding:20px;
-    background:rgba(0,0,0,.75);
-    backdrop-filter:blur(8px);
-}
-
-.modal.show{
-    display:grid;
-}
-
-.modal-box{
-    width:min(460px,100%);
-    padding:25px;
-    border-radius:21px;
-    border:1px solid var(--border);
-    background:#15151e;
-}
-
-.modal-top{
-    display:flex;
-    justify-content:space-between;
-}
-
-.close{
-    border:0;
-    background:none;
-    color:#aaa;
-    font-size:25px;
-}
-
-.google{
-    width:100%;
-    margin-top:20px;
-    padding:13px;
-    border:0;
-    border-radius:11px;
-    background:white;
-    color:#111;
-    font-weight:bold;
-}
-
-/* NOTIFICATION */
-
-.toast{
-    position:fixed;
-    right:20px;
-    bottom:20px;
-    width:min(350px,calc(100% - 40px));
-    padding:15px;
-    border-radius:15px;
-    border:1px solid var(--border);
-    background:#181820;
-    box-shadow:0 20px 60px #000;
-    opacity:0;
-    transform:translateY(100px);
-    transition:.3s;
-    z-index:300;
-}
-
-.toast.show{
-    opacity:1;
-    transform:none;
-}
-
-.toast p{
-    color:var(--muted);
-    font-size:11px;
-    margin-top:5px;
-}
-
-/* RESPONSIVE */
-
-@media(max-width:1050px){
-
-    .grid,
-    .songs{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .stats{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .controls{
-        grid-template-columns:repeat(2,1fr);
-    }
-}
-
-@media(max-width:800px){
-
-    .sidebar{
-        display:none;
-    }
-
-    .main{
-        margin-left:0;
-        width:100%;
-    }
-
-    .topbar{
-        padding:0 15px;
-    }
-
-    .content{
-        padding:18px 15px 50px;
-    }
-
-    .hero{
-        padding:35px 23px;
-    }
-
-    .hero h1{
-        letter-spacing:-2px;
-    }
-
-    .profile-layout{
-        grid-template-columns:1fr;
-    }
-}
-
-@media(max-width:550px){
-
-    .search{
-        width:55%;
-    }
-
-    .free{
-        display:none;
-    }
-
-    .hero h1{
-        font-size:43px;
-    }
-
-    .stats,
-    .grid,
-    .songs,
-    .controls{
-        grid-template-columns:1fr;
-    }
-
-    .create-bottom{
-        align-items:stretch;
-        flex-direction:column;
-        gap:13px;
-    }
-
-    .create-bottom .btn{
-        width:100%;
-    }
-}
-</style>
-</head>
-
-<body>
-
-<div class="app">
-
-<aside class="sidebar">
-
-<div class="logo">
-    <div class="logo-icon">♫</div>
-    <div>NovaTune <span>AI</span></div>
-</div>
-
-<div class="label">Workspace</div>
-
-<button class="nav active" onclick="page('home',this)">⌂ &nbsp; Home</button>
-<button class="nav" onclick="page('create',this)">✦ &nbsp; Create</button>
-<button class="nav" onclick="page('studio',this)">🎛 &nbsp; Studio</button>
-<button class="nav" onclick="page('library',this)">▣ &nbsp; Library</button>
-
-<div class="label">Discover</div>
-
-<button class="nav" onclick="page('explore',this)">◉ &nbsp; Explore</button>
-<button class="nav" onclick="page('trending',this)">🔥 &nbsp; Trending</button>
-
-<div class="label">Account</div>
-
-<button class="nav" onclick="page('profile',this)">◎ &nbsp; Profile</button>
-<button class="nav" onclick="page('settings',this)">⚙ &nbsp; Settings</button>
-
-<div class="bottom">
-    <div class="user">
-        <div class="avatar">H</div>
-        <div>
-            <b>Harshu</b><br>
-            <small>Creator account</small>
-        </div>
-    </div>
-</div>
-
-</aside>
-
-
-<main class="main">
-
-<header class="topbar">
-
-<div class="search">
-    <span class="search-icon">⌕</span>
-    <input placeholder="Search music, creators, genres...">
-</div>
-
-<div class="actions">
-
-<div class="free">✦ Free Studio</div>
-
-<button class="action" onclick="toast('Notifications','Your notification center is ready.')">♧</button>
-
-<button class="action" onclick="openLogin()">◎</button>
-
-</div>
-
-</header>
-
-
-<div class="content">
-
-
-<!-- HOME -->
-
-<section class="page active" id="home">
-
-<div class="hero">
-
-<div class="badge">✦ NEXT-GENERATION AI MUSIC PLATFORM</div>
-
-<h1>
-Create the future of
-<span class="gradient">music.</span>
-</h1>
-
-<p>
-Create songs, lyrics, voices, beats, remixes and music experiences
-from one powerful AI workspace. Publish your creations and build
-your own creator identity.
-</p>
-
-<div class="buttons">
-
-<button class="btn btn-primary" onclick="page('create')">
-    ✦ Create with AI
-</button>
-
-<button class="btn" onclick="page('explore')">
-    Explore Music
-</button>
-
-</div>
-
-</div>
-
-
-<div class="stats">
-
-<div class="stat">
-    <span class="muted">Total Creations</span>
-    <h2 style="margin:12px 0">0</h2>
-    <small>Start creating</small>
-</div>
-
-<div class="stat">
-    <span class="muted">Listeners</span>
-    <h2 style="margin:12px 0">0</h2>
-    <small>Grow your audience</small>
-</div>
-
-<div class="stat">
-    <span class="muted">Followers</span>
-    <h2 style="margin:12px 0">0</h2>
-    <small>Build your community</small>
-</div>
-
-<div class="stat">
-    <span class="muted">Projects</span>
-    <h2 style="margin:12px 0">0</h2>
-    <small>Cloud workspace</small>
-</div>
-
-</div>
-
-
-<div class="head">
-<div>
-<h2>Powerful AI tools</h2>
-<p>Everything you need to create music.</p>
-</div>
-</div>
-
-<div class="grid">
-
-<div class="card" onclick="page('create')">
-<div class="card-icon">🎵</div>
-<h3>AI Music</h3>
-<p>Turn an idea into a complete music concept.</p>
-</div>
-
-<div class="card">
-<div class="card-icon">✍️</div>
-<h3>AI Lyrics</h3>
-<p>Generate original structured lyrics.</p>
-</div>
-
-<div class="card">
-<div class="card-icon">🎤</div>
-<h3>AI Voice</h3>
-<p>Create voice and vocal experiences.</p>
-</div>
-
-<div class="card">
-<div class="card-icon">🥁</div>
-<h3>AI Beat Maker</h3>
-<p>Create rhythm and instrumental ideas.</p>
-</div>
-
-<div class="card">
-<div class="card-icon">🎚️</div>
-<h3>Audio Studio</h3>
-<p>Edit and arrange your projects.</p>
-</div>
-
-<div class="card">
-<div class="card-icon">🔀</div>
-<h3>AI Remix</h3>
-<p>Create new versions of supported audio.</p>
-</div>
-
-<div class="card">
-<div class="card-icon">🎬</div>
-<h3>Music Video</h3>
-<p>Turn music into visual experiences.</p>
-</div>
-
-<div class="card">
-<div class="card-icon">🎹</div>
-<h3>Karaoke</h3>
-<p>Create instrumental and karaoke workflows.</p>
-</div>
-
-</div>
-
-
-<div class="head">
-<div>
-<h2>🔥 Trending music</h2>
-<p>Popular creations from the community.</p>
-</div>
-</div>
-
-<div class="songs">
-
-<div class="song">
-<div class="cover">
-🎧
-<button class="play" onclick="play('Dream Beyond')">▶</button>
-</div>
-<div class="song-body">
-<h3>Dream Beyond</h3>
-<p>AI Creator • Cinematic</p>
-<div class="meta"><span>♥ 2.4K</span><span>24K plays</span></div>
-</div>
-</div>
-
-<div class="song">
-<div class="cover b">
-🌙
-<button class="play" onclick="play('Midnight Dreams')">▶</button>
-</div>
-<div class="song-body">
-<h3>Midnight Dreams</h3>
-<p>Nova Creator • Lo-Fi</p>
-<div class="meta"><span>♥ 1.8K</span><span>18K plays</span></div>
-</div>
-</div>
-
-<div class="song">
-<div class="cover c">
-🔥
-<button class="play" onclick="play('Rise Again')">▶</button>
-</div>
-<div class="song-body">
-<h3>Rise Again</h3>
-<p>Music Creator • Pop</p>
-<div class="meta"><span>♥ 3.1K</span><span>31K plays</span></div>
-</div>
-</div>
-
-<div class="song">
-<div class="cover d">
-🌌
-<button class="play" onclick="play('Beyond Stars')">▶</button>
-</div>
-<div class="song-body">
-<h3>Beyond Stars</h3>
-<p>Future Sound • Electronic</p>
-<div class="meta"><span>♥ 1.2K</span><span>12K plays</span></div>
-</div>
-</div>
-
-</div>
-
-</section>
-
-
-<!-- CREATE -->
-
-<section class="page" id="create">
-
-<div class="head">
-<div>
-<h2>✦ AI Music Creator</h2>
-<p>Describe exactly what you want to hear.</p>
-</div>
-</div>
-
-<div class="creator">
-
-<textarea id="prompt"
-placeholder="Example: Create a cinematic Hindi motivational song about never giving up, with emotional piano, powerful drums and modern male vocals..."></textarea>
-
-<div class="controls">
-
-<div class="field">
-<label>Language</label>
-<select id="language">
-<option>Hindi</option>
-<option>English</option>
-<option>Hinglish</option>
-<option>Punjabi</option>
-<option>Marathi</option>
-</select>
-</div>
-
-<div class="field">
-<label>Genre</label>
-<select>
-<option>Pop</option>
-<option>Cinematic</option>
-<option>Hip Hop</option>
-<option>Lo-Fi</option>
-<option>Rock</option>
-<option>Electronic</option>
-<option>Devotional</option>
-</select>
-</div>
-
-<div class="field">
-<label>Mood</label>
-<select>
-<option>Energetic</option>
-<option>Emotional</option>
-<option>Motivational</option>
-<option>Peaceful</option>
-<option>Epic</option>
-<option>Dark</option>
-</select>
-</div>
-
-<div class="field">
-<label>Length</label>
-<select>
-<option>Short</option>
-<option>1–2 Minutes</option>
-<option>2–3 Minutes</option>
-<option>3–5 Minutes</option>
-</select>
-</div>
-
-</div>
-
-<div class="create-bottom">
-
-<div class="toggle">
-<span class="switch on"></span>
-Public release
-</div>
-
-<button class="btn btn-primary" onclick="generate()">
-✦ Generate AI Song
-</button>
-
-</div>
-
-</div>
-
-</section>
-
-
 <!-- STUDIO -->
 
 <section class="page" id="studio">
@@ -1142,7 +5,51 @@ Public release
 <div class="head">
 <div>
 <h2>🎛 Professional Studio</h2>
-<p>Your future music production workspace.</p>
+<p>Create, record and manage your audio projects.</p>
+</div>
+
+<button class="btn btn-primary" onclick="toast('New Project','Your new studio project is ready.')">
+✦ New Project
+</button>
+</div>
+
+<!-- Studio overview -->
+
+<div class="stats">
+
+<div class="stat">
+<span class="muted">Projects</span>
+<h2 style="margin:12px 0" id="studioProjects">0</h2>
+<small>Active projects</small>
+</div>
+
+<div class="stat">
+<span class="muted">Audio Files</span>
+<h2 style="margin:12px 0">0</h2>
+<small>Uploaded files</small>
+</div>
+
+<div class="stat">
+<span class="muted">Recording</span>
+<h2 style="margin:12px 0">Ready</h2>
+<small>Microphone available</small>
+</div>
+
+<div class="stat">
+<span class="muted">Storage</span>
+<h2 style="margin:12px 0">0 MB</h2>
+<small>Cloud workspace</small>
+</div>
+
+</div>
+
+
+<!-- Studio tools -->
+
+<div class="head">
+<div>
+<h2>Studio Tools</h2>
+<p>Choose a tool to start working on your project.</p>
 </div>
 </div>
 
@@ -1151,14 +58,640 @@ Public release
 <div class="card">
 <div class="card-icon">🎙️</div>
 <h3>Voice Recorder</h3>
-<p>Record vocals directly from your device.</p>
+<p>Record vocals, ideas and voice notes directly from your device.</p>
 <br>
-<button class="btn" onclick="toast('Voice Recorder','Recorder will be connected to the backend.')">Open</button>
+<button class="btn btn-primary" onclick="startRecorder()">
+● Start Recording
+</button>
 </div>
+
 
 <div class="card">
 <div class="card-icon">✂️</div>
 <h3>Audio Editor</h3>
-<p>Trim, split, merge and edit audio.</p>
+<p>Trim, split and organize your audio tracks inside your project.</p>
 <br>
-<but
+<button class="btn" onclick="toast('Audio Editor','Audio editor workspace opened.')">
+Open Editor
+</button>
+</div>
+
+
+<div class="card">
+<div class="card-icon">🎚️</div>
+<h3>Mixing Console</h3>
+<p>Control volume, balance and effects for your tracks.</p>
+<br>
+<button class="btn" onclick="toast('Mixing Console','Mixer workspace opened.')">
+Open Mixer
+</button>
+</div>
+
+
+<div class="card">
+<div class="card-icon">🥁</div>
+<h3>Beat Maker</h3>
+<p>Create rhythm patterns and instrumental ideas.</p>
+<br>
+<button class="btn" onclick="openBeatMaker()">
+Open Beat Maker
+</button>
+</div>
+
+
+<div class="card">
+<div class="card-icon">🎤</div>
+<h3>Vocal Studio</h3>
+<p>Prepare your vocal recording and create a clean workflow.</p>
+<br>
+<button class="btn" onclick="toast('Vocal Studio','Vocal workspace opened.')">
+Open Studio
+</button>
+</div>
+
+
+<div class="card">
+<div class="card-icon">🎛️</div>
+<h3>Effects</h3>
+<p>Explore reverb, delay, equalizer and creative effects.</p>
+<br>
+<button class="btn" onclick="openEffects()">
+Open Effects
+</button>
+</div>
+
+
+<div class="card">
+<div class="card-icon">🔊</div>
+<h3>Mastering</h3>
+<p>Prepare your final project for publishing and sharing.</p>
+<br>
+<button class="btn" onclick="toast('Mastering','Mastering workspace opened.')">
+Master Audio
+</button>
+</div>
+
+
+<div class="card">
+<div class="card-icon">📤</div>
+<h3>Export</h3>
+<p>Export your finished project when your backend is connected.</p>
+<br>
+<button class="btn" onclick="exportProject()">
+Export Project
+</button>
+</div>
+
+</div>
+
+
+<!-- Current Project -->
+
+<div class="head">
+<div>
+<h2>🎵 Current Project</h2>
+<p>Your active studio workspace.</p>
+</div>
+</div>
+
+<div class="creator">
+
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:15px;
+flex-wrap:wrap;
+">
+
+<div>
+<span class="muted">PROJECT</span>
+<h2 style="margin-top:7px;">My First NovaTune Project</h2>
+<p class="muted" style="margin-top:6px;">
+Start building your first AI music project.
+</p>
+</div>
+
+<div style="display:flex;gap:8px;flex-wrap:wrap;">
+
+<button class="btn"
+onclick="toast('Project Saved','Your project has been saved locally.')">
+💾 Save
+</button>
+
+<button class="btn btn-primary"
+onclick="toast('AI Assistant','AI Studio Assistant is ready.')">
+✦ AI Assistant
+</button>
+
+</div>
+
+</div>
+
+
+<!-- Timeline -->
+
+<div style="
+margin-top:25px;
+padding:20px;
+border:1px solid var(--border);
+border-radius:16px;
+background:#09090e;
+">
+
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:15px;
+">
+
+<b>Timeline</b>
+
+<span class="muted">00:00 / 03:00</span>
+
+</div>
+
+
+<div style="
+height:75px;
+border-radius:12px;
+overflow:hidden;
+position:relative;
+background:
+repeating-linear-gradient(
+90deg,
+rgba(139,92,246,.18) 0px,
+rgba(139,92,246,.18) 2px,
+transparent 2px,
+transparent 18px
+);
+border:1px solid var(--border);
+">
+
+<div style="
+position:absolute;
+left:0;
+top:0;
+bottom:0;
+width:32%;
+background:linear-gradient(
+90deg,
+rgba(139,92,246,.18),
+rgba(236,72,153,.18)
+);
+border-right:2px solid var(--purple);
+"></div>
+
+<div style="
+position:absolute;
+left:8%;
+top:18px;
+height:38px;
+width:22%;
+border-radius:7px;
+background:rgba(139,92,246,.35);
+border:1px solid rgba(139,92,246,.6);
+"></div>
+
+</div>
+
+
+<div style="
+display:flex;
+justify-content:center;
+gap:10px;
+margin-top:18px;
+">
+
+<button class="action" onclick="toast('Studio','⏮ Previous')">⏮</button>
+
+<button
+class="action"
+style="
+width:50px;
+height:50px;
+border-radius:50%;
+background:linear-gradient(135deg,var(--purple),var(--pink));
+border:0;
+"
+onclick="toggleStudioPlay(this)"
+>
+▶
+</button>
+
+<button class="action" onclick="toast('Studio','Next track')">⏭</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Recording Modal -->
+
+<div class="modal" id="recordModal">
+
+<div class="modal-box">
+
+<div class="modal-top">
+
+<div>
+<h2>🎙️ Voice Recorder</h2>
+<p class="muted" style="margin-top:5px;">
+Record your voice for your project.
+</p>
+</div>
+
+<button class="close" onclick="closeStudioModal('recordModal')">
+×
+</button>
+
+</div>
+
+
+<div style="
+margin:25px 0;
+height:120px;
+display:grid;
+place-items:center;
+border-radius:18px;
+background:#09090e;
+border:1px solid var(--border);
+">
+
+<div id="recordStatus" style="text-align:center;">
+
+<div style="font-size:38px;">🎙️</div>
+
+<div class="muted" style="margin-top:8px;">
+Ready to record
+</div>
+
+</div>
+
+</div>
+
+
+<div style="
+display:flex;
+justify-content:center;
+gap:10px;
+">
+
+<button
+class="btn btn-primary"
+id="recordButton"
+onclick="toggleRecording()"
+>
+● Start Recording
+</button>
+
+<button
+class="btn"
+onclick="closeStudioModal('recordModal')"
+>
+Cancel
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Beat Maker Modal -->
+
+<div class="modal" id="beatModal">
+
+<div class="modal-box">
+
+<div class="modal-top">
+
+<div>
+<h2>🥁 Beat Maker</h2>
+<p class="muted">Build a simple rhythm pattern.</p>
+</div>
+
+<button class="close" onclick="closeStudioModal('beatModal')">
+×
+</button>
+
+</div>
+
+
+<div id="beatGrid" style="
+display:grid;
+grid-template-columns:repeat(8,1fr);
+gap:6px;
+margin-top:25px;
+">
+
+</div>
+
+
+<div style="
+display:flex;
+justify-content:center;
+gap:10px;
+margin-top:22px;
+">
+
+<button
+class="btn btn-primary"
+onclick="generateBeat()"
+>
+✦ Generate Beat
+</button>
+
+<button
+class="btn"
+onclick="clearBeat()"
+>
+Clear
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Effects Modal -->
+
+<div class="modal" id="effectsModal">
+
+<div class="modal-box">
+
+<div class="modal-top">
+
+<div>
+<h2>🎛 Audio Effects</h2>
+<p class="muted">Configure your sound effects.</p>
+</div>
+
+<button class="close" onclick="closeStudioModal('effectsModal')">
+×
+</button>
+
+</div>
+
+
+<div class="setting">
+
+<div>
+<h4>Reverb</h4>
+<p>Add space and depth to audio.</p>
+</div>
+
+<input
+type="range"
+min="0"
+max="100"
+value="35"
+style="accent-color:var(--purple)"
+>
+
+</div>
+
+
+<div class="setting">
+
+<div>
+<h4>Delay</h4>
+<p>Create an echo effect.</p>
+</div>
+
+<input
+type="range"
+min="0"
+max="100"
+value="20"
+style="accent-color:var(--purple)"
+>
+
+</div>
+
+
+<div class="setting">
+
+<div>
+<h4>Bass Boost</h4>
+<p>Increase low-frequency presence.</p>
+</div>
+
+<input
+type="range"
+min="0"
+max="100"
+value="45"
+style="accent-color:var(--purple)"
+>
+
+</div>
+
+
+<button
+class="btn btn-primary"
+style="width:100%;margin-top:20px;"
+onclick="closeStudioModal('effectsModal');toast('Effects Applied','Your effect settings have been saved.')"
+>
+✓ Apply Effects
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<script>
+
+/* STUDIO FUNCTIONS */
+
+let recording = false;
+
+function startRecorder(){
+
+    document.getElementById("recordModal").classList.add("show");
+
+}
+
+
+function closeStudioModal(id){
+
+    document.getElementById(id).classList.remove("show");
+
+}
+
+
+function toggleRecording(){
+
+    recording = !recording;
+
+    const button = document.getElementById("recordButton");
+    const status = document.getElementById("recordStatus");
+
+    if(recording){
+
+        button.innerHTML = "■ Stop Recording";
+
+        status.innerHTML = `
+            <div style="font-size:38px;">🔴</div>
+            <div style="color:#ff6b8a;margin-top:8px;">
+                Recording...
+            </div>
+        `;
+
+    }else{
+
+        button.innerHTML = "● Start Recording";
+
+        status.innerHTML = `
+            <div style="font-size:38px;">🎙️</div>
+            <div class="muted" style="margin-top:8px;">
+                Recording saved locally
+            </div>
+        `;
+
+        toast(
+            "Recording Complete",
+            "Your recording has been added to the studio."
+        );
+
+    }
+
+}
+
+
+function openBeatMaker(){
+
+    document.getElementById("beatModal").classList.add("show");
+
+    const grid = document.getElementById("beatGrid");
+
+    if(grid.children.length === 0){
+
+        for(let i=0;i<32;i++){
+
+            const cell = document.createElement("button");
+
+            cell.style.height = "35px";
+            cell.style.borderRadius = "7px";
+            cell.style.border = "1px solid var(--border)";
+            cell.style.background = "#0c0c12";
+            cell.style.color = "white";
+            cell.innerHTML = "•";
+
+            cell.onclick = function(){
+
+                this.classList.toggle("active");
+
+                if(this.classList.contains("active")){
+
+                    this.style.background =
+                    "linear-gradient(135deg,var(--purple),var(--pink))";
+
+                }else{
+
+                    this.style.background = "#0c0c12";
+
+                }
+
+            };
+
+            grid.appendChild(cell);
+
+        }
+
+    }
+
+}
+
+
+function clearBeat(){
+
+    const cells = document.querySelectorAll("#beatGrid button");
+
+    cells.forEach(cell=>{
+
+        cell.classList.remove("active");
+        cell.style.background="#0c0c12";
+
+    });
+
+}
+
+
+function generateBeat(){
+
+    const cells = document.querySelectorAll("#beatGrid button");
+
+    cells.forEach(cell=>{
+
+        cell.classList.remove("active");
+        cell.style.background="#0c0c12";
+
+    });
+
+    [0,4,8,12,16,20,24,28].forEach(i=>{
+
+        if(cells[i]){
+
+            cells[i].classList.add("active");
+
+            cells[i].style.background =
+            "linear-gradient(135deg,var(--purple),var(--pink))";
+
+        }
+
+    });
+
+    toast(
+        "Beat Generated",
+        "A basic rhythm pattern has been created."
+    );
+
+}
+
+
+function openEffects(){
+
+    document.getElementById("effectsModal").classList.add("show");
+
+}
+
+
+function exportProject(){
+
+    toast(
+        "Export",
+        "Export system is ready for backend integration."
+    );
+
+}
+
+
+function toggleStudioPlay(button){
+
+    if(button.innerHTML.includes("▶")){
+
+        button.innerHTML="Ⅱ";
+
+        toast("Studio","Preview playing...");
+
+    }else{
+
+        button.innerHTML="▶";
+
+        toast("Studio","Preview paused.");
+
+    }
+
+}
+
+</script>
