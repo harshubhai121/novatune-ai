@@ -1251,6 +1251,22 @@ function searchAudio(){
                 : "none";
         });
 }
+    function importAudio(input){
+
+    const file = input.files[0];
+
+    if(!file) return;
+
+    const sizeMB =
+        (file.size / (1024 * 1024)).toFixed(2);
+
+    toast(
+        "Audio Imported",
+        file.name + " • " + sizeMB + " MB"
+    );
+
+    input.value = "";
+}
 </script>
 
 </section>
