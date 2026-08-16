@@ -1147,6 +1147,19 @@ function toggleStudioPlay(button){
 </style>
 
 <div class="library-head">
+    <button
+    class="primary"
+    onclick="document.getElementById('audioUpload').click()">
+    ＋ Import Audio
+</button>
+
+<input
+    type="file"
+    id="audioUpload"
+    accept="audio/*"
+    style="display:none"
+    onchange="importAudio(this)"
+>
     <div>
         <h1>🎵 Audio Library</h1>
         <p class="library-sub">
